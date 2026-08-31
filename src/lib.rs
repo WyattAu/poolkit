@@ -147,3 +147,128 @@ impl DbPool {
         &self.pool
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::Duration;
+
+    #[test]
+    fn db_pool_builder_default_values() {
+        let builder = DbPoolBuilder::new("sqlite::memory:");
+        assert_eq!(builder.max_connections, 10);
+        assert_eq!(builder.min_connections, 1);
+        assert_eq!(builder.idle_timeout, Duration::from_secs(600));
+        assert_eq!(builder.acquire_timeout, Duration::from_secs(30));
+        assert_eq!(builder.database_url, "sqlite::memory:");
+    }
+
+    #[test]
+    fn db_pool_builder_custom_values() {
+        let builder = DbPoolBuilder::new("postgres://localhost/test")
+            .max_connections(20)
+            .min_connections(5)
+            .idle_timeout(Duration::from_secs(120))
+            .acquire_timeout(Duration::from_secs(10));
+        assert_eq!(builder.max_connections, 20);
+        assert_eq!(builder.min_connections, 5);
+        assert_eq!(builder.idle_timeout, Duration::from_secs(120));
+        assert_eq!(builder.acquire_timeout, Duration::from_secs(10));
+        assert_eq!(builder.database_url, "postgres://localhost/test");
+    }
+
+    #[test]
+    fn db_pool_builder_chaining() {
+        let builder = DbPoolBuilder::new("sqlite::memory:")
+            .max_connections(50)
+            .min_connections(2);
+        assert_eq!(builder.max_connections, 50);
+        assert_eq!(builder.min_connections, 2);
+    }
+
+    #[test]
+    fn db_pool_builder_default_factory() {
+        let builder = DbPool::builder("sqlite::memory:");
+        assert_eq!(builder.max_connections, 10);
+        assert_eq!(builder.database_url, "sqlite::memory:");
+    }
+
+    #[test]
+    fn pool_error_connection_display() {
+        let sqlx_err = sqlx::Error::RowNotFound;
+        let err = PoolError::Connection(sqlx_err);
+        let msg = err.to_string();
+        assert!(msg.contains("connection error"));
+    }
+
+    #[test]
+    fn pool_error_timeout_display() {
+        let err = PoolError::Timeout("acquire timed out".into());
+        let msg = err.to_string();
+        assert!(msg.contains("acquire timed out"));
+    }
+
+    #[test]
+    fn pool_error_pool_closed_display() {
+        let err = PoolError::PoolClosed;
+        let msg = err.to_string();
+        assert!(msg.contains("pool closed"));
+    }
+
+    #[test]
+    fn pool_error_migration_display() {
+        let err = PoolError::Migration("failed to run migration".into());
+        let msg = err.to_string();
+        assert!(msg.contains("failed to run migration"));
+    }
+
+    #[test]
+    fn health_status_is_healthy() {
+        let result = HealthCheckResult {
+            status: HealthStatus::Healthy,
+            latency_ms: 5,
+            message: None,
+        };
+        assert!(result.is_healthy());
+    }
+
+    #[test]
+    fn health_status_is_unhealthy() {
+        let result = HealthCheckResult {
+            status: HealthStatus::Unhealthy,
+            latency_ms: 100,
+            message: Some("connection refused".into()),
+        };
+        assert!(!result.is_healthy());
+    }
+
+    #[test]
+    fn health_check_result_creation() {
+        let result = HealthCheckResult {
+            status: HealthStatus::Healthy,
+            latency_ms: 42,
+            message: None,
+        };
+        assert_eq!(result.status, HealthStatus::Healthy);
+        assert_eq!(result.latency_ms, 42);
+        assert!(result.message.is_none());
+    }
+
+    #[test]
+    fn health_check_result_with_message() {
+        let result = HealthCheckResult {
+            status: HealthStatus::Unhealthy,
+            latency_ms: 200,
+            message: Some("timeout".into()),
+        };
+        assert_eq!(result.status, HealthStatus::Unhealthy);
+        assert_eq!(result.message.as_deref(), Some("timeout"));
+    }
+
+    #[test]
+    fn health_status_equality() {
+        assert_eq!(HealthStatus::Healthy, HealthStatus::Healthy);
+        assert_eq!(HealthStatus::Unhealthy, HealthStatus::Unhealthy);
+        assert_ne!(HealthStatus::Healthy, HealthStatus::Unhealthy);
+    }
+}
