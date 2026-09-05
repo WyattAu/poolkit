@@ -23,6 +23,7 @@ optional = true
 [dependencies.sqlx-sqlite]
 version = "0.8"
 optional = true
+features = ["bundled"]
 
 [dependencies.testcontainers]
 version = "0.23"
