@@ -38,3 +38,7 @@ testcontainers = ["dep:testcontainers"]
 [dev-dependencies]
 serde_json = "1"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "test-util"] }
+
+[lints.clippy]
+unwrap_used = "warn"
+expect_used = "warn"
