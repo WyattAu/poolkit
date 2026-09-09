@@ -1,6 +1,6 @@
 [package]
 name = "poolkit"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.85"
 description = "Database connection pooling for Rust — SQLx wrapper with health checks, lazy connections, test containers, and metrics"
