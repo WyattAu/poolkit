@@ -1230,7 +1230,6 @@ dependencies = [
  "sqlx-sqlite",
  "testcontainers",
  "thiserror",
- "tokio",
 ]
 
 [[package]]

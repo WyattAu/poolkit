@@ -1,5 +1,9 @@
 # poolkit
 
+[![docs.rs](https://docs.rs/poolkit/badge.svg)](https://docs.rs/poolkit)
+[![crates.io](https://img.shields.io/crates/v/poolkit.svg)](https://crates.io/crates/poolkit)
+[![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
+
 Database connection pooling for Rust — SQLx wrapper with health checks, lazy connections, test containers, and metrics.
 
 ## Purpose
