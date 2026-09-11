@@ -6,8 +6,14 @@ ignore = [
     # rustls-pemfile unmaintained. Transitive via sqlx rustls stack; the
     # ecosystem migration to rustls-pki-types has not landed in sqlx yet.
     "RUSTSEC-2025-0134",
-]
+    # rsa Marvin Attack. Transitive via sqlx-postgres SCRAM auth; no fixed
+    # rsa release exists upstream. Revisit when RUSTSEC-2023-0071 is patched.
     "RUSTSEC-2023-0071",
+    # tokio-tar PAX header file-smuggling. Reached only through the optional
+    # `testcontainers` feature (dev/CI suites), never in the published
+    # artifact. No fixed release exists.
     "RUSTSEC-2025-0111",
+    # time stack-exhaustion DoS. Patched in time >=0.3.47 which requires
+    # rustc 1.88 vs this crate's MSRV 1.85. Revisit at the next MSRV bump.
     "RUSTSEC-2026-0009",
 ]

@@ -11,7 +11,6 @@ ignore = [
     # rustls-pemfile unmaintained. Transitive via sqlx rustls stack; the
     # ecosystem migration to rustls-pki-types has not landed in sqlx yet.
     "RUSTSEC-2025-0134",
-]
     # rsa Marvin Attack (timing sidechannel). Transitive via sqlx-postgres
     # SCRAM auth; no fixed rsa release exists upstream. Revisit when
     # RUSTSEC-2023-0071 gains a patched version.
