@@ -86,7 +86,13 @@ impl DbPoolBuilder {
     }
 
     /// Build the pool, returning a [`PoolError`] on failure.
+    ///
+    /// Installs the compiled-in `sqlx::any` driver set (idempotent) —
+    /// without this, `AnyPool` has no drivers registered and every
+    /// connect fails.
     pub async fn build(self) -> Result<DbPool, PoolError> {
+        sqlx::any::install_default_drivers();
+
         let options = sqlx::any::AnyPoolOptions::new()
             .max_connections(self.max_connections)
             .min_connections(self.min_connections)

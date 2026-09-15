@@ -1,6 +1,6 @@
 [package]
 name = "poolkit"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.85"
 description = "Database connection pooling for Rust — SQLx wrapper with health checks, lazy connections, test containers, and metrics"
@@ -15,33 +15,31 @@ sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls"] }
 thiserror = "2"
 serde = { version = "1", features = ["derive"] }
 
-[dependencies.sqlx-postgres]
-version = "0.8"
-optional = true
-
-[dependencies.sqlx-sqlite]
-version = "0.8"
-optional = true
-features = ["bundled"]
-
-[dependencies.testcontainers]
-version = "0.23"
-optional = true
-
 [features]
 default = ["postgres"]
-postgres = ["sqlx-postgres"]
-sqlite = ["sqlx-sqlite"]
-testcontainers = ["dep:testcontainers"]
+# Driver features must come from the `sqlx` facade itself: `sqlx::any`
+# registers drivers compiled into the facade (`install_default_drivers`),
+# and standalone `sqlx-postgres`/`sqlx-sqlite` deps would not register
+# anything.
+postgres = ["sqlx/postgres"]
+sqlite = ["sqlx/sqlite"]
 
 [dev-dependencies]
 serde_json = "1"
+# sqlite_pool.rs: on-disk databases in a tempdir.
+tempfile = "3"
+# postgres_pool.rs: a throwaway Postgres per test run (docker).
+testcontainers = "0.23"
+testcontainers-modules = { version = "0.11", features = ["postgres"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
 
-[package.metadata.cargo-machete]
-# sqlx-postgres/sqlx-sqlite pin driver feature alignment (libsqlite3-sys
-# bundling) without direct code references; testcontainers is a published
-# feature hook for downstream integration suites.
-ignored = ["sqlx-postgres", "sqlx-sqlite", "testcontainers"]
+[[test]]
+name = "sqlite_pool"
+required-features = ["sqlite"]
+
+[[test]]
+name = "postgres_pool"
+required-features = ["postgres"]
 
 [lints.clippy]
 unwrap_used = "warn"
