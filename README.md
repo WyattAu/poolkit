@@ -4,16 +4,16 @@
 [![crates.io](https://img.shields.io/crates/v/poolkit.svg)](https://crates.io/crates/poolkit)
 [![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
 
-Database connection pooling for Rust — SQLx wrapper with health checks, lazy connections, test containers, and metrics.
+Database connection pooling for Rust; SQLx wrapper with health checks, lazy connections, test containers, and metrics.
 
 ## Purpose
 
 `poolkit` wraps SQLx's connection pool to provide a batteries-included experience for database-backed Rust services:
 
-- **Health checks** — built-in `SELECT 1` probes with latency reporting.
-- **Lazy connections** — connections are only opened on first use.
-- **Test containers** — optional integration with `testcontainers` for ephemeral test databases.
-- **Metrics** — pool stats (active, idle, max, min) at your fingertips.
+- **Health checks**; built-in `SELECT 1` probes with latency reporting.
+- **Lazy connections**; connections are only opened on first use.
+- **Test containers**; optional integration with `testcontainers` for ephemeral test databases.
+- **Metrics**; pool stats (active, idle, max, min) at your fingertips.
 
 ## Usage
 
@@ -51,10 +51,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Features
 
-- `default` — enables `postgres`
-- `postgres` — PostgreSQL support via `sqlx-postgres`
-- `sqlite` — SQLite support via `sqlx-sqlite`
-- `testcontainers` — ephemeral test database containers
+- `default`; enables `postgres`
+- `postgres`; PostgreSQL support via `sqlx-postgres`
+- `sqlite`; SQLite support via `sqlx-sqlite`
+- `testcontainers`; ephemeral test database containers
 
 ## MSRV
 

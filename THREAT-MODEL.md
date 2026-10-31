@@ -1,4 +1,4 @@
-# Threat Model — poolkit
+# Threat Model: poolkit
 
 Status: **v1.0** · Method: STRIDE over the public API surface
 (`DbPool`, `DbPoolBuilder`, `PoolStats`, `HealthCheckResult`,
@@ -32,21 +32,21 @@ health interpretation, and error/stat surfacing.
 | T4 | Stale/false health verdicts | Spoofing | `is_healthy`, `HealthCheckResult` | Health is a typed enum (`HealthStatus::Healthy/Unhealthy`) carrying measured latency and message; verdicts derive from actual probe outcomes, and `HealthStatus` is `Copy + Eq` so it can be compared safely | `health_status_is_healthy`, `health_status_is_unhealthy`, `health_check_result_creation`, `health_check_result_zero_latency`, `health_check_result_large_latency` |
 | T5 | DB-server error strings carry injection/PII into app logs | Information Disclosure/Tampering | `PoolError` | Errors wrap typed variants (`Connection`, `Timeout`, `Migration`, `PoolClosed`) with caller context kept separate from server payloads; display output is unit-pinned | `pool_error_connection_display`, `pool_error_timeout_display`, `pool_error_migration_display`, `pool_error_pool_closed_display`, `pool_error_is_std_error` |
 
-## OPEN RISKS (missing mitigations — not fabricated)
+## OPEN RISKS (missing mitigations: not fabricated)
 
-- **OPEN-1 — `database_url` is a plain `String` on the builder.** It is
+- **OPEN-1; `database_url` is a plain `String` on the builder.** It is
   not a zeroize-on-drop secret type. Callers passing credentials in the
   URL should scope builder lifetime and avoid logging it; the URL is
   deliberately *not* `pub`-readable on the pool itself.
-- **OPEN-2 — health checks are point-in-time.** A healthy probe does not
+- **OPEN-2; health checks are point-in-time.** A healthy probe does not
   guarantee the next statement succeeds; orchestrators should re-probe
   on failure rather than caching verdicts.
 
 ## Out of Scope
 
-- Transport security (TLS), authentication, and authorization — owned by
+- Transport security (TLS), authentication, and authorization; owned by
   `sqlx` and the server.
-- SQL injection — statement construction is the caller's/`sqlx`'s
+- SQL injection; statement construction is the caller's/`sqlx`'s
   concern; this crate never formats SQL.
 - Cross-instance pool coordination.
 

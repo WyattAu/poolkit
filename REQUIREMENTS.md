@@ -1,10 +1,10 @@
-# Requirements — poolkit
+# Requirements: poolkit
 
 Numbered, testable requirements. Every requirement maps to at least one named
 test; every security-relevant test cites at least one requirement. Threat
 IDs reference `THREAT-MODEL.md`.
 
-Scope note: `poolkit` provides database connection pooling for Rust — a
+Scope note: `poolkit` provides database connection pooling for Rust; a
 `sqlx` wrapper with builder-configured sizing/timeouts, health checks,
 lazy connections, test-container helpers, and pool metrics.
 
@@ -25,7 +25,7 @@ lazy connections, test-container helpers, and pool metrics.
 |----|-------------|----------|
 | REQ-PK-100 | Acquire timeouts are configurable so pool contention cannot wedge callers indefinitely (T2) | MUST |
 | REQ-PK-101 | Zero-connection and zero-timeout configurations are constructible-and-detectable (not silently coerced into "infinite") so unsafe pool configs fail visibly (T2, T3) | MUST |
-| REQ-PK-102 | Error variants render typed, context-separated `Display` messages — database URLs are never interpolated into error output (T1, T5) | MUST |
+| REQ-PK-102 | Error variants render typed, context-separated `Display` messages; database URLs are never interpolated into error output (T1, T5) | MUST |
 | REQ-PK-103 | Health verdicts are typed enums derived from probe outcomes, never stringly-taxed booleans (T4) | MUST |
 
 ## Robustness

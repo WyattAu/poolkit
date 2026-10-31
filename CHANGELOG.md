@@ -1,7 +1,7 @@
 # Changelog
 
 All notable changes to this project are documented here. Format: [Keep a
-Changelog](https://keepachangelog.com/) — versions follow [semver](https://semver.org).
+Changelog](https://keepachangelog.com/); versions follow [semver](https://semver.org).
 
 ## [Unreleased]
 
@@ -13,7 +13,7 @@ Changelog](https://keepachangelog.com/) — versions follow [semver](https://sem
 
 ### Fixed
 
-- **`DbPool` could never connect — `sqlx::AnyPool` had no drivers
+- **`DbPool` could never connect; `sqlx::AnyPool` had no drivers
   registered.** The `postgres`/`sqlite` features enabled the standalone
   `sqlx-postgres`/`sqlx-sqlite` crates, but `sqlx::any` only registers
   drivers compiled into the `sqlx` facade. Features now enable
@@ -53,5 +53,5 @@ Changelog](https://keepachangelog.com/) — versions follow [semver](https://sem
 ## [0.1.0] - 2026-09-01
 
 ### Added
-- Database connection pooling — SQLx wrapper with health checks.
+- Database connection pooling; SQLx wrapper with health checks.
 - Published to crates.io (2026-09-01).
